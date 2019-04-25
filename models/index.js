@@ -41,6 +41,8 @@ const User = db.define('user', {
   }
 });
 
+Page.belongsTo(User, { as: 'author' });
+
 Page.beforeValidate((page) => {
   const slug = titleSlug(page.title);
   page.slug = slug;
