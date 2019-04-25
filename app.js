@@ -1,9 +1,10 @@
 const morgan = require('morgan');
 const express = require('express');
 const app = express();
-const layout = require('./views/layout');
 const models = require('./models/index');
-const routes = require('./routes/router');
+const wiki = require('./routes/wiki');
+const user = require('./routes/user');
+
 
 models.db.authenticate().
 then(() => {
@@ -14,10 +15,11 @@ app.use(morgan("dev"));
 app.use(express.static(__dirname + '/public'));
 
 app.use(express.urlencoded({ extended: false }));
-app.use('/wiki', routes);
+app.use('/wiki', wiki);
+app.use('/', user);
 
 app.get('/', (req, res) => {
-  res.send(layout(''));
+  res.redirect('/wiki');
 });
 
 const syncTables = async () => {
