@@ -2,6 +2,8 @@ const Sequelize = require('sequelize');
 const db = new Sequelize('postgres://localhost:5432/wikistack', {
   logging: false
 });
+const titleSlug = require('../public/funcs');
+
 
 const Page = db.define('page', {
   title: {
@@ -11,9 +13,6 @@ const Page = db.define('page', {
   slug: {
     type: Sequelize.STRING,
     allowNull: false,
-    validate: {
-      isAlphanumeric: true
-    }
   },
   content: {
     type: Sequelize.TEXT,
@@ -42,6 +41,10 @@ const User = db.define('user', {
   }
 });
 
+Page.beforeValidate((page) => {
+  const slug = titleSlug(page.title);
+  page.slug = slug;
+})
 module.exports = {
   db, Page, User
 };
